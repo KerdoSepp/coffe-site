@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Sora', sans-serif;
+
+  --color-primary: #ffffff;
+  --color-secondary: #dadada;
+  --color-muted: #727272;
+  --color-rating: #fbbe21;
+  --color-page: #191919;
+  --color-surface: #212121;
+  --color-elevated: #272b28;
+  --color-accent: #c67c4e;
+
+  --radius-input: 8px;
+  --radius-card: 12px;
+  --radius-media: 20px;
+}
