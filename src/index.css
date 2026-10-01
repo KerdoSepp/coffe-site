@@ -16,3 +16,121 @@
   --radius-card: 12px;
   --radius-media: 20px;
 }
+
+:root {
+  color-scheme: dark;
+  font-family: 'Sora', sans-serif;
+  background: #191919;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  min-width: 320px;
+  background: #191919;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100dvh;
+  margin: 0;
+  background: #191919;
+}
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+}
+
+.leaflet-container {
+  isolation: isolate;
+  z-index: 0;
+  background: #272b28;
+  font-family: inherit;
+}
+
+.address-map-pin {
+  display: grid;
+  box-sizing: border-box;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: #191919;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 35%);
+}
+
+.address-map-pin--destination {
+  width: 28px;
+  height: 28px;
+  border-width: 5px;
+  background: #c67c4e;
+}
+
+.address-map-pin--destination::after {
+  position: absolute;
+  top: 23px;
+  width: 10px;
+  height: 10px;
+  border-right: 3px solid #ffffff;
+  border-bottom: 3px solid #ffffff;
+  background: #c67c4e;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.delivery-map-courier {
+  display: grid;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: #191919;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
+}
+
+.delivery-map-courier img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(58%) sepia(35%) saturate(934%)
+    hue-rotate(337deg) brightness(90%) contrast(88%);
+}
+
+::selection {
+  color: #ffffff;
+  background: #c67c4e;
+}
+
+.icon-accent,
+.nav-icon-active {
+  filter: brightness(0) saturate(100%) invert(58%) sepia(35%) saturate(934%)
+    hue-rotate(337deg) brightness(90%) contrast(88%);
+}
+
+.nav-icon-idle {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(2%) saturate(68%)
+    hue-rotate(325deg) brightness(96%) contrast(78%);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

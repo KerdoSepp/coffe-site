@@ -1,18 +1,31 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
+import AppNav from './components/AppNav.jsx';
+import CartProvider from './components/CartProvider.jsx';
+import UserProvider from './components/UserProvider.jsx';
+import Delivery from './pages/Delivery.jsx';
+import DetailItem from './pages/DetailItem.jsx';
 import Home from './pages/Home.jsx';
-import About from './pages/About.jsx';
+import Order from './pages/Order.jsx';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-[#191919]">
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </div>
-    </Router>
+    <BrowserRouter>
+      <CartProvider>
+        <UserProvider>
+          <div className="min-h-dvh bg-page text-primary">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/detail/:productId" element={<DetailItem />} />
+              <Route path="/order" element={<Order />} />
+              <Route path="/delivery" element={<Delivery />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            <AppNav />
+          </div>
+        </UserProvider>
+      </CartProvider>
+    </BrowserRouter>
   );
 }
 
