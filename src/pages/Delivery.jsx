@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import backIcon from '../assets/figma/delivery-back.svg';
@@ -12,6 +12,28 @@ import useUser from '../hooks/useUser.js';
 
 export default function Delivery() {
   const [recenterSignal, setRecenterSignal] = useState(0);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const handleGesture = useRef(null);
+  const suppressHandleClick = useRef(false);
+
+  const startHandleDrag = (event) => {
+    if (event.button !== 0) return;
+    handleGesture.current = { pointerId: event.pointerId, y: event.clientY };
+    suppressHandleClick.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const finishHandleDrag = (event) => {
+    const gesture = handleGesture.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    const distance = event.clientY - gesture.y;
+    if (Math.abs(distance) > 24) {
+      setIsPanelOpen(distance < 0);
+      suppressHandleClick.current = true;
+    }
+    handleGesture.current = null;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  };
   const { deliveryAddress, fulfillmentMethod } = useUser();
   const displayedAddress =
     fulfillmentMethod === 'deliver' ? deliveryAddress : coffeeShop.address;
@@ -26,8 +48,8 @@ export default function Delivery() {
       : coffeeShop.coordinates;
 
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-[#f9f9f9] pb-[394px] md:pb-0">
-      <div className="absolute inset-0 z-0 isolate bottom-[300px] md:bottom-0">
+    <main className="relative min-h-dvh overflow-hidden bg-page pb-[394px] md:pb-0">
+      <div className="absolute inset-0 z-0 isolate">
         <DeliveryMap
           destination={destination}
           recenterSignal={recenterSignal}
@@ -52,9 +74,35 @@ export default function Delivery() {
         </div>
       </div>
 
-      <section className="fixed inset-x-0 bottom-[72px] z-40 rounded-t-[24px] bg-page px-6 pt-4 pb-5 md:inset-y-6 md:right-40 md:left-auto md:w-[375px] md:rounded-[24px] md:border md:border-elevated">
-        <div className="mx-auto h-1.5 w-11 rounded-full bg-[#e3e3e3]" />
-        <div className="mt-8 text-center">
+      <section
+        className={`fixed inset-x-0 bottom-0 z-40 rounded-t-[24px] bg-page px-6 pt-2 pb-[92px] md:top-6 md:right-40 md:left-auto md:w-[375px] md:rounded-[24px] md:border md:border-elevated md:pb-5 ${isPanelOpen ? 'md:bottom-6' : 'md:bottom-auto'}`}
+      >
+        <button
+          type="button"
+          aria-label={
+            isPanelOpen
+              ? 'Collapse delivery details'
+              : 'Expand delivery details'
+          }
+          aria-expanded={isPanelOpen}
+          aria-controls="delivery-details"
+          onPointerDown={startHandleDrag}
+          onPointerUp={finishHandleDrag}
+          onPointerCancel={() => {
+            handleGesture.current = null;
+          }}
+          onClick={() => {
+            if (suppressHandleClick.current) {
+              suppressHandleClick.current = false;
+              return;
+            }
+            setIsPanelOpen((open) => !open);
+          }}
+          className="mx-auto flex h-8 w-24 touch-none select-none items-center justify-center rounded-lg cursor-grab active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-accent"
+        >
+          <span className="h-1.5 w-11 rounded-full bg-[#e3e3e3]" />
+        </button>
+        <div className={`${isPanelOpen ? 'mt-4' : 'mt-1'} text-center`}>
           <h1 className="text-base font-semibold text-white">
             10 minutes left
           </h1>
@@ -64,50 +112,52 @@ export default function Delivery() {
           </p>
         </div>
 
-        <div className="mt-6 flex gap-2.5">
-          {[true, true, true, false].map((complete, index) => (
-            <span
-              key={index}
-              className={`h-1 flex-1 rounded-full ${complete ? 'bg-accent' : 'bg-[#e3e3e3]'}`}
-            />
-          ))}
-        </div>
-
-        <div className="mt-4 flex items-center gap-4 rounded-xl border border-[#e3e3e3] py-2 pr-4 pl-3">
-          <div className="grid size-14 shrink-0 place-items-center rounded-xl border border-[#e3e3e3]">
-            <img src={bikeIcon} alt="" className="icon-accent size-11" />
+        <div id="delivery-details" hidden={!isPanelOpen}>
+          <div className="mt-6 flex gap-2.5">
+            {[true, true, true, false].map((complete, index) => (
+              <span
+                key={index}
+                className={`h-1 flex-1 rounded-full ${complete ? 'bg-accent' : 'bg-[#e3e3e3]'}`}
+              />
+            ))}
           </div>
-          <div>
-            <h2 className="text-sm font-semibold text-white">
-              Delivered your order
-            </h2>
-            <p className="mt-1 text-xs leading-normal text-secondary">
-              We will deliver your goods to you in the shortes possible time.
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img
-              src={courierImage}
-              alt="Brooklyn Simmons"
-              className="size-14 rounded-[14px] object-cover"
-            />
+          <div className="mt-4 flex items-center gap-4 rounded-xl border border-[#e3e3e3] py-2 pr-4 pl-3">
+            <div className="grid size-14 shrink-0 place-items-center rounded-xl border border-[#e3e3e3]">
+                <img src={bikeIcon} alt="" className="icon-accent size-8 object-contain" />
+            </div>
             <div>
               <h2 className="text-sm font-semibold text-white">
-                Brooklyn Simmons
+                Delivered your order
               </h2>
-              <p className="mt-1 text-xs text-secondary">Personal Courier</p>
+              <p className="mt-1 text-xs leading-normal text-secondary">
+                We will deliver your goods to you in the shortes possible time.
+              </p>
             </div>
           </div>
-          <a
-            href="tel:+3725550123"
-            aria-label="Call courier"
-            className="grid size-11 place-items-center rounded-full border border-[#e3e3e3]"
-          >
-            <img src={callIcon} alt="" className="size-6" />
-          </a>
+
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img
+                src={courierImage}
+                alt="Brooklyn Simmons"
+                className="size-14 rounded-[14px] object-cover"
+              />
+              <div>
+                <h2 className="text-sm font-semibold text-white">
+                  Brooklyn Simmons
+                </h2>
+                <p className="mt-1 text-xs text-secondary">Personal Courier</p>
+              </div>
+            </div>
+            <a
+              href="tel:0"
+              aria-label="Call courier"
+              className="grid size-11 place-items-center rounded-full border border-[#e3e3e3]"
+            >
+              <img src={callIcon} alt="" className="size-6" />
+            </a>
+          </div>
         </div>
       </section>
     </main>

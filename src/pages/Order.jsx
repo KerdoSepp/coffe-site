@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import discountIcon from '../assets/figma/order-discount.svg';
 import editIcon from '../assets/figma/order-edit.svg';
 import noteIcon from '../assets/figma/order-note.svg';
 import walletIcon from '../assets/figma/order-wallet.svg';
@@ -16,8 +15,10 @@ export default function Order() {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [showNote, setShowNote] = useState(false);
   const [note, setNote] = useState('');
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('Cash');
   const navigate = useNavigate();
-  const { cartItems, updateQuantity } = useCart();
+  const { cartItems, updateQuantity, clearCart } = useCart();
   const {
     deliveryAddress,
     setDeliveryAddress,
@@ -42,6 +43,12 @@ export default function Order() {
   const saveAddress = (address) => {
     setDeliveryAddress(address);
     setIsEditingAddress(false);
+  };
+
+  const placeOrder = () => {
+    if (!hasItems) return;
+    clearCart();
+    navigate('/delivery');
   };
 
   return (
@@ -171,18 +178,6 @@ export default function Order() {
 
       <div className="-mx-6 mt-4 h-1 bg-elevated" />
 
-      <button
-        type="button"
-        disabled={!hasItems}
-        className="mt-4 flex h-14 w-full items-center justify-between rounded-2xl border border-[#ededed] bg-white px-4 text-[#313131] transition enabled:hover:bg-[#ededed] disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        <span className="flex items-center gap-4 text-sm font-semibold">
-          <img src={discountIcon} alt="" className="size-5" />1 Discount is
-          Applies
-        </span>
-        <span className="text-2xl font-light">›</span>
-      </button>
-
       <section className="mt-6">
         <h2 className="text-base font-semibold text-white">Payment Summary</h2>
         <dl className="mt-4 space-y-2 text-sm text-white">
@@ -206,25 +201,57 @@ export default function Order() {
         <div className="mx-auto max-w-lg">
           <button
             type="button"
+            onClick={() => setShowPaymentOptions((open) => !open)}
+            aria-expanded={showPaymentOptions}
+            aria-controls="payment-options"
             className="mb-3 flex w-full items-center justify-between px-0 text-left"
           >
             <span className="flex items-center gap-4">
               <img src={walletIcon} alt="" className="size-5" />
               <span>
                 <strong className="block text-sm text-white">
-                  Cash/Wallet
+                  {paymentMethod}
                 </strong>
                 <span className="text-xs font-semibold text-accent">
                   $ {total.toFixed(2)}
                 </span>
               </span>
             </span>
-            <span className="text-xl text-secondary">⌄</span>
+            <span
+              aria-hidden="true"
+              className={`text-xl text-secondary ${showPaymentOptions ? '' : 'rotate-180'}`}
+            >
+              ⌄
+            </span>
           </button>
+          {showPaymentOptions && (
+            <fieldset
+              id="payment-options"
+              className="mb-4 flex gap-3 rounded-xl bg-surface p-3"
+            >
+              <legend className="sr-only">Payment method</legend>
+              {['Cash', 'Wallet'].map((method) => (
+                <label
+                  key={method}
+                  className="flex flex-1 cursor-pointer items-center gap-2 text-sm text-white"
+                >
+                  <input
+                    type="radio"
+                    name="payment-method"
+                    value={method}
+                    checked={paymentMethod === method}
+                    onChange={() => setPaymentMethod(method)}
+                    className="accent-accent"
+                  />
+                  {method}
+                </label>
+              ))}
+            </fieldset>
+          )}
           <button
             type="button"
             disabled={!hasItems}
-            onClick={() => hasItems && navigate('/delivery')}
+            onClick={placeOrder}
             className="h-14 w-full rounded-full bg-accent text-base font-semibold text-white transition enabled:hover:bg-[#d58857] disabled:cursor-not-allowed disabled:bg-elevated disabled:text-muted"
           >
             Order

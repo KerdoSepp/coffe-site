@@ -6,7 +6,9 @@ export default function CoffeeList({ products, query }) {
   if (!products.length) {
     return (
       <div className="grid min-h-64 place-items-center text-center text-secondary">
-        No coffee matches “{query}”.
+        {query.trim()
+          ? `No coffee matches “${query}” with the current filters.`
+          : 'No coffee matches the current filters.'}
       </div>
     );
   }

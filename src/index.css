@@ -48,6 +48,10 @@ a {
   cursor: pointer;
 }
 
+.product-backdrop {
+  cursor: default;
+}
+
 img {
   display: block;
 }
@@ -57,6 +61,20 @@ img {
   z-index: 0;
   background: #272b28;
   font-family: inherit;
+}
+
+.dark-map .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%)
+    saturate(60%);
+}
+
+.dark-map .leaflet-control-attribution {
+  background: #212121;
+  color: #dadada;
+}
+
+.dark-map .leaflet-control-attribution a {
+  color: #c67c4e;
 }
 
 .address-map-pin {

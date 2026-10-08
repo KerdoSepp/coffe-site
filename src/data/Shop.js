@@ -1,5 +1,5 @@
 export const coffeeShop = {
-  name: 'Kohtu Coffee',
+  name: 'Coffee Shop',
   address: {
     street: 'Tallinna tn 8',
     city: 'Kuressaare',

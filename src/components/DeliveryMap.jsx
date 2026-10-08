@@ -76,7 +76,7 @@ export default function DeliveryMap({ destination, recenterSignal }) {
       zoom={15}
       zoomControl={false}
       scrollWheelZoom
-      className="h-full w-full"
+      className="dark-map h-full w-full"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

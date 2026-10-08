@@ -78,12 +78,17 @@ export default function CartProvider({ children }) {
 
   const quantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const value = useMemo(
     () => ({
       cartItems,
       quantity,
       addItem,
       updateQuantity,
+      clearCart,
     }),
     [cartItems, quantity]
   );

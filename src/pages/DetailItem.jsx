@@ -26,12 +26,14 @@ export default function DetailItem() {
 
   const addToCart = () => {
     addItem(product, size, quantity);
-    navigate('/order');
   };
 
   return (
-    <main className="mx-auto min-h-dvh w-full max-w-5xl pb-44 md:flex md:items-center md:gap-10 md:px-8 md:py-12">
-      <div className="relative h-[238px] overflow-hidden rounded-b-[20px] md:h-[560px] md:flex-1 md:rounded-[24px]">
+    <main
+      aria-label={`${product.name} details`}
+      className="fixed inset-x-0 top-[max(12px,env(safe-area-inset-top))] bottom-0 z-30 mx-auto w-full max-w-5xl overflow-hidden rounded-t-[20px] bg-page pb-44 md:top-0 md:flex md:items-start md:gap-10 md:rounded-3xl md:px-8 md:pt-12 md:pb-36"
+    >
+      <div className="relative h-[238px] overflow-hidden rounded-b-[20px] md:h-[560px] md:shrink-0 md:flex-1 md:rounded-[24px]">
         <img
           src={product.image}
           alt={product.name}
@@ -46,7 +48,7 @@ export default function DetailItem() {
         </button>
       </div>
 
-      <div className="px-[22px] pt-4 md:flex-1 md:px-0">
+      <div className="px-[22px] pt-4 md:min-w-0 md:flex-1 md:px-0 md:pt-0">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-white">
@@ -79,7 +81,7 @@ export default function DetailItem() {
                 <img
                   src={feature.src}
                   alt={feature.label}
-                  className="icon-accent size-8 object-contain"
+                  className="icon-accent size-6 object-contain"
                 />
               </div>
             ))}
@@ -87,8 +89,7 @@ export default function DetailItem() {
         </div>
 
         <p className="mt-4 max-w-xl text-lg leading-[1.25] text-secondary">
-          A cappuccino is an approximately 150 ml (5 oz) beverage, with 25 ml of
-          espresso coffee and 85ml of fresh milk.
+          {product.longDescription}
         </p>
 
         <section className="mt-12">

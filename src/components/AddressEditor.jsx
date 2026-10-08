@@ -134,6 +134,9 @@ export default function AddressEditor({ address, onClose, onSave }) {
 
   return (
     <div
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
       className="fixed inset-0 z-[70] grid place-items-end bg-black/60 p-0 backdrop-blur-sm sm:place-items-center sm:p-6"
       role="dialog"
       aria-modal="true"
